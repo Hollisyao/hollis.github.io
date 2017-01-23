@@ -5,7 +5,7 @@ header-img: img/home-bg.jpg
 email: hollisyao@outlook.com
 description: "架构师 | 羽毛球爱好者 | 这里是 Hollis Yao 的个人博客，代码演绎人生。"
 keyword: "Hollis, Hollis Yao, 尧敏华, 尧敏华的博客, 博客, 个人网站, 互联网, 产品, C#, Azure"
-url: "https://hollisyao.me"              # your host, for absolute URL
+url: "http://hollisyao.me"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 
