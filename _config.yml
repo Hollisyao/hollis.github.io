@@ -44,7 +44,6 @@ gems: [jekyll-paginate]
 markdown: kramdown
 kramdown:
   input: GFM                            # use Github Flavored Markdown !important
-  auto_ids: false                       # Disable auto-generated ID's for headings
 
 
 
