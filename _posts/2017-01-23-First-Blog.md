@@ -6,7 +6,7 @@ date:       2017-01-23			# 覆盖文章名中的日期
 author:     "Hollis Yao|尧敏华"
 header-img: ""
 catalog: true
-category: 生活
+category: [生活, 随记]
 published:  true   				# default true 设置 “false” 后，文章不会显示
 tags:
     - 设计
