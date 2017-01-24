@@ -6,6 +6,7 @@ date:       2017-01-23
 author:     "Hollis Yao|尧敏华"
 header-img: ""
 catalog: true
+category: 生活
 tags:
     - 设计
     - 谈天说地
