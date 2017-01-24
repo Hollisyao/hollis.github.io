@@ -3,10 +3,10 @@ layout:     post
 title:      "第一篇博客"
 subtitle:   "论写博客的正确姿势"
 date:       2017-01-23			# 覆盖文章名中的日期
-author:     "Hollis Yao|尧敏华"
+author:     "Hollis Yao"
 header-img: ""
 catalog: true
-category: [生活, 随记]
+category: 胡言乱语
 published:  true   				# default true 设置 “false” 后，文章不会显示
 tags:
     - 设计

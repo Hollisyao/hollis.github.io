@@ -3,7 +3,7 @@ title: Hollis's Blog
 SEOTitle: Hollis's Blog | 尧敏华的博客
 header-img: img/home-bg.jpg
 email: hollisyao@outlook.com
-description: "架构师 | 羽毛球爱好者 | 这里是 Hollis Yao 的个人博客，代码演绎人生。"
+description: "架构师 | 羽毛球爱好者 | 这里是 Hollis Yao 的个人博客，用代码调戏人生。"
 keyword: "Hollis, Hollis Yao, 尧敏华, 尧敏华的博客, 博客, 个人网站, 互联网, 产品, C#, Azure"
 url: "http://hollisyao.me"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
@@ -70,14 +70,14 @@ ba_track_id: 62d2cf69946e4f0efedabfef6d45d181
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "代码演绎人生<br>人生没有地图，我们一路走，一路点燃希望，一路寻找答案。"
+sidebar-about-description: "用代码调戏人生"
 sidebar-avatar: /img/avatar-hy.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
 # Featured Tags
 featured-tags: true                     # whether or not using Feature-Tags
-featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
+featured-condition-size: 0              # A tag will be featured if the size of it is more than this condition value
 
 
 

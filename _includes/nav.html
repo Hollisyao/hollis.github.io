@@ -20,9 +20,11 @@
                         <a href="{{ site.baseurl }}/">Home</a>
                     </li>
                     {% for page in site.pages %}{% if page.title %}
+					{% if page.path contains '/' %}{% else %}<!--不显示具体的分类目录，added by Hollis Yao-->
                     <li>
                         <a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
                     </li>
+					{% endif %}
                     {% endif %}{% endfor %}
                 </ul>
             </div>
