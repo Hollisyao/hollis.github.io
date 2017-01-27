@@ -21,7 +21,7 @@ header-img: "img/about-bg.jpg"
     <p>Hey，我是<strong>尧敏华</strong>，你可以叫我Hollis，程序猿 &amp; 架构师，任职于微软中国。</p>
 
      
-    <p>强迫症，完美主义者，习惯性熬夜患者，严重拖延症患者，。</p>
+    <p>强迫症，完美主义者，习惯性熬夜患者，严重拖延症患者。</p>
     <!-- <h5>Talks</h5>
 
     <ul>
@@ -98,17 +98,18 @@ header-img: "img/about-bg.jpg"
 {% if site.duoshuo_username %}
 <!-- 多说评论框 start -->
 <div class="comment">
-    <!-- This id is used for indexing my loss comments forcedly -->
+    <!-- This id is used for indexing my loss comments forcedly 1187623191091085319,6380142516141818626-->
     <div class="ds-thread"
-    {% if site.duoshuo_username == "HollisYao" %}
-        data-thread-id="1187623191091085319"
+    {% if site.duoshuo_username == "hollisyao1" %}
+        data-thread-id="6380142516141818626"
     {% else %}
-    <!-- U can just use this key generated to index comments at page about -->
         data-thread-key="{{site.duoshuo_username}}/about"
     {% endif %}
 
     data-title="{{page.title}}"
-    data-url="{{site.url}}/about/"></div>
+    data-url="{{site.url}}/about/">
+	<!-- U can just use this key （data-thread-key）generated to index comments at page about -->
+	</div>
 </div>
 <!-- 多说评论框 end -->
 
