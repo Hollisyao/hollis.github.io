@@ -15,7 +15,7 @@ $ git clone git@github.com:hollisyao/hollisyao.github.io.git
 ```
 
 ## 新增功能
-1. 增加分类(Category)功能;
+1. 增加分类(Category)功能,由于Github不支持自定义插件，务必在本地生成之后，上传_site到master;
 2. 增加基于Lunr.js的全文搜索功能，由于Lunr.js本身不支持中文，且在纯js端目前无法支持中文分词，改进之后，可以支持未分词的中文。
 
 ## License
