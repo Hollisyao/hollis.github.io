@@ -33,8 +33,8 @@ header-img: "img/tag-bg.jpg"
 			col-xs-12
 			postlist-container
 		">
-			<!-- 分类列表 -->
-			{% for category in site.categories %}{% if category.first == page.title %}
+			<!-- 分类列表中所有的文章清单 -->
+			{% for category in site.categories %}{% if category.first == page.category %}
 			<div class="one-tag-list">
 			  	<span class="fa fa-tag listing-seperator" id="{{ category[0] }}">
                     <span class="tag-text">{{ category[0] }}</span>
