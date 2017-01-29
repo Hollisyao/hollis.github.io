@@ -61,10 +61,10 @@ layout: default
 				{{ content }}
 
                 <hr style="visibility: hidden;">
-
+site.url : {{site.url}}; site.baseurl: {{site.baseurl}}; page.url : {{page.url}}
                 {% if site.duoshuo_share and site.duoshuo_username %}
                 <!-- 多说 Share start -->
-                <div class="ds-share"
+                <div class="ds-share flat"
                     style="text-align: right"
                     data-thread-key="{{page.id}}"
                     data-title="{{page.title}}"
@@ -84,12 +84,11 @@ layout: default
                       <div class="ds-share-icons-more">
                       </div>
                     </div>
-                <hr>
+					<hr>
                 </div>
                 <!-- 多说 Share end-->
                 {% endif %}
-
-
+			
                 <ul class="pager">
                     {% if page.previous.url %}
                     <li class="previous">
