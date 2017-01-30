@@ -8,6 +8,18 @@ keyword: "Hollis, Hollis Yao, 尧敏华, 尧敏华的博客, 博客, 个人网�
 url: "http://hollisyao.me"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
+# 为站点内的所有Page和Post设置参数
+defaults:
+  -
+    scope:
+      path: "_drafts" #设置生效范围，只有在_drafts目录下的page和post才会受影响
+    values:
+      draft_flag: "[draft]" #设置草稿文章的前缀显示文字
+  -
+    scope:
+      path: "" # an empty string here means all files in the project
+    values:
+      layout: "post"
 
 # SNS settings
 RSS: false

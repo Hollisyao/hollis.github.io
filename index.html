@@ -7,7 +7,7 @@ description: "用代码调戏人生"
 <div class="post-preview">
     <a href="{{ post.url | prepend: site.baseurl }}">
         <h2 class="post-title">
-            {{ post.title }}
+            <i>{{ post.draft_flag }}</i> {{ post.title }}
         </h2>
         {% if post.subtitle %}
         <h3 class="post-subtitle">
