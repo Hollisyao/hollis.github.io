@@ -5,8 +5,8 @@
     <description>架构师 | 羽毛球爱好者 | 这里是 Hollis Yao 的个人博客，用代码调戏人生。</description>
     <link>http://hollisyao.me/</link>
     <atom:link href="http://hollisyao.me/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 31 Jan 2017 18:26:50 +0800</pubDate>
-    <lastBuildDate>Tue, 31 Jan 2017 18:26:50 +0800</lastBuildDate>
+    <pubDate>Tue, 31 Jan 2017 19:40:29 +0800</pubDate>
+    <lastBuildDate>Tue, 31 Jan 2017 19:40:29 +0800</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
     
       <item>
@@ -45,7 +45,7 @@
   &lt;li&gt;修正了两个bug&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;---
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;---
 layout: null #禁用掉全局模板页的设置, added by Hollis Yao
 ---
 
@@ -90,7 +90,7 @@ Azure分为全球版和中国版，都有很多免费使用的方式，足够大
 1. 禁止了集成config.xml全局设置
 2. 修正了两个bug
 
-``` xml
+```html
 ---
 layout: null #禁用掉全局模板页的设置, added by Hollis Yao
 ---
@@ -134,7 +134,7 @@ layout: null #禁用掉全局模板页的设置, added by Hollis Yao
 &amp;gt;
 &amp;gt;- &lt;a href=&quot;http://anthonychu.ca/post/add-search-to-jekyll-blog-free-azure-search/ &amp;quot;Add Search to a Jekyll Blog for Free with Azure Search&amp;quot;&quot;&gt;Add Search to a Jekyll Blog for Free with Azure Search&lt;/a&gt;
 &amp;lt;/description&amp;gt;
-				&lt;pubDate&gt;Tue, 31 Jan 2017 18:26:31 +0800&lt;/pubDate&gt;
+				&lt;pubDate&gt;Tue, 31 Jan 2017 19:40:23 +0800&lt;/pubDate&gt;
 				&lt;link /&gt;http://hollisyao.me/azure/2017/01/31/Azure-Search/&amp;lt;/link&amp;gt;
 				&lt;guid isPermaLink=&quot;true&quot;&gt;http://hollisyao.me/azure/2017/01/31/Azure-Search/&lt;/guid&gt;&lt;/p&gt;
 
@@ -210,7 +210,7 @@ layout: null #禁用掉全局模板页的设置, added by Hollis Yao
   &lt;/ul&gt;
 &lt;/blockquote&gt;
 </description>
-        <pubDate>Tue, 31 Jan 2017 18:26:31 +0800</pubDate>
+        <pubDate>Tue, 31 Jan 2017 19:40:23 +0800</pubDate>
         <link>http://hollisyao.me/azure/2017/01/31/Azure-Search/</link>
         <guid isPermaLink="true">http://hollisyao.me/azure/2017/01/31/Azure-Search/</guid>
         

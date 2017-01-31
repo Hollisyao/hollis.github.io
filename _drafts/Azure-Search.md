@@ -40,7 +40,7 @@ Azure分为全球版和中国版，都有很多免费使用的方式，足够大
 1. 禁止了集成config.xml全局设置
 2. 修正了两个bug
 
-``` xml
+```html
 ---
 layout: null #禁用掉全局模板页的设置, added by Hollis Yao
 ---
