@@ -5,8 +5,8 @@
     <description>架构师 | 羽毛球爱好者 | 这里是 Hollis Yao 的个人博客，用代码调戏人生。</description>
     <link>http://hollisyao.me/</link>
     <atom:link href="http://hollisyao.me/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 31 Jan 2017 18:23:40 +0800</pubDate>
-    <lastBuildDate>Tue, 31 Jan 2017 18:23:40 +0800</lastBuildDate>
+    <pubDate>Tue, 31 Jan 2017 18:26:50 +0800</pubDate>
+    <lastBuildDate>Tue, 31 Jan 2017 18:26:50 +0800</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
     
       <item>
@@ -134,7 +134,7 @@ layout: null #禁用掉全局模板页的设置, added by Hollis Yao
 &amp;gt;
 &amp;gt;- &lt;a href=&quot;http://anthonychu.ca/post/add-search-to-jekyll-blog-free-azure-search/ &amp;quot;Add Search to a Jekyll Blog for Free with Azure Search&amp;quot;&quot;&gt;Add Search to a Jekyll Blog for Free with Azure Search&lt;/a&gt;
 &amp;lt;/description&amp;gt;
-				&lt;pubDate&gt;Tue, 31 Jan 2017 18:19:23 +0800&lt;/pubDate&gt;
+				&lt;pubDate&gt;Tue, 31 Jan 2017 18:26:31 +0800&lt;/pubDate&gt;
 				&lt;link /&gt;http://hollisyao.me/azure/2017/01/31/Azure-Search/&amp;lt;/link&amp;gt;
 				&lt;guid isPermaLink=&quot;true&quot;&gt;http://hollisyao.me/azure/2017/01/31/Azure-Search/&lt;/guid&gt;&lt;/p&gt;
 
@@ -210,7 +210,7 @@ layout: null #禁用掉全局模板页的设置, added by Hollis Yao
   &lt;/ul&gt;
 &lt;/blockquote&gt;
 </description>
-        <pubDate>Tue, 31 Jan 2017 18:19:23 +0800</pubDate>
+        <pubDate>Tue, 31 Jan 2017 18:26:31 +0800</pubDate>
         <link>http://hollisyao.me/azure/2017/01/31/Azure-Search/</link>
         <guid isPermaLink="true">http://hollisyao.me/azure/2017/01/31/Azure-Search/</guid>
         
