@@ -11,7 +11,7 @@
     <meta name="keywords" content="Hollis, Hollis Yao, 尧敏华, 尧敏华的博客, 博客, 个人网站, 互联网, 产品, C#, Azure">
     <meta name="theme-color" content="#000000">
     
-    <title>Search - Hollis's Blog | 尧敏华的博客</title>
+    <title>Category: Azure - Hollis's Blog | 尧敏华的博客</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -20,7 +20,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://hollisyao.me/search/">
+    <link rel="canonical" href="http://hollisyao.me/categories/Azure/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -172,14 +172,18 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!--
+  这里是 category_index.html 文件，里面使用到的一些 DOM 结构依赖 pizn.me 的样式。但您可以只参考里面的 jekyll 语法就好。这里的作用是显示出 category 分类列表。
+-->
+
+<!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/tag-bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="site-heading" id="tag-heading">
-                    <h1>Search</h1>
-                    <span class="subheading">Search Center</span>
+                    <h1>Category: Azure</h1>
+                    <span class="subheading"></span>
                 </div>
             </div>
         </div>
@@ -189,60 +193,82 @@
 <!-- Main Content -->
 <div class="container">
 	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">            
-			<div class="search">
-				<form action="/search" method="get" class="bs-example bs-example-form">
-  <!--<label for="search-box" style="display:hidden;">Search</label>-->
-  <div class="input-group">
-	  <input type="text" id="search-box" name="query" class="form-control" placeholder="What are you looking for">
-	  <span class="input-group-addon" style="padding: 0px;">
-		<input type="submit" value="Search" class="btn btn-primary" style="padding: 3.5px 20px;">
-	  </span>
-	  
-  </div>
-</form>
-
-<ul id="search-results"></ul>
-
-<script>
-  window.store = {
-    
-      "azure-2017-02-01-azure-search": {
-        "title": "撸Azure羊毛之Azure Search",
-        "author": "Hollis Yao",
-        "category": "",
-        "date": "2017-02-01 11:36:07 +0800",
-        "content": "  2017年我最重要的目标之一就是坚持写博客。作为一个（自诩😝）全栈攻城狮，写博客这么一件稀松平常的事情，也不能写得太平常了。首先，要构建一个适合Geeker的高逼格的个人博客，一定不是博客园、CSDN，也不是现在比较流行的简书。所以，在死了很多脑细胞之后，最终选定了Github+Jekyll，来构建高效、静态的独立个人站点，并且用最适合码字的Markdown书写。当然，因为这是一个静态博客的平台，为了让它能有各种动态酷炫的效果，我也是操碎心了，虽然借用了别人的模板，但也是爬了各种坑，到最后，还添加了我需要的分类、搜索、草稿文章标识等功能。然而，程序猿总是有点洁癖和强迫症的，lunr.js的搜索对中文的支持实在是不堪，在没有服务器端的支持下，只能对中文进行简单搜索，还是无法支持中文分词。转念一想，我软有一个这么强大的搜索服务，为什么不能做一个整合呢。再一研究，居然免费版也足够我使用，心动不如行动，于是乎，就有了我这第一篇博客。Azure背景简述Azure分为全球版和中国版，都有很多免费使用的方式，足够大家针对开发、测试和小型应用场景。以下渠道可以试用Azure：  全球版，免费注册，送200美金额度；中国版，一元注册试用账号，1500元人民币额度。  MSDN订阅可以免费获取全球版25美金/月的额度。  微软员工可以免费获取全球版150美金/月的额度。目前Azure Search只在全球版Azure提供，将来也会进入中国。创建Azure Search服务打开浏览器，输入portal.azure.com，进入Azure全球版管理门户，登陆之后，进入主界面，依次按照下图所示点击在新建搜索服务输入相关信息，确保选中免费定价级别的服务即可，检查输入信息完毕之后，点击创建，稍等片刻，搜索服务即创建完成。准备要搜索的数据为了让Azure Search能搜索全站的文章，我们必须把所有文章的数据集合到一个文件中。Jekyll有一个官方插件jekyll-feed，可以把所有文章用一个RSS形式整理起来，作为一个RSS订阅给用户使用。但是，这里面生成的RSS文件，对于文章正文内容只有摘要，没有全部内容，所以我们需要略微改写。参考了all.xml,再根据我的博客配置情况作了修改：  禁止了继承config.xml的全局设置  修正了几个bug，并调整了一些格式---layout: null #禁用掉全局模板页的设置, added by Hollis Yao---&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;&lt;rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\"&gt;    &lt;channel&gt;        &lt;title&gt;{{ site.title | xml_escape }}&lt;/title&gt;        &lt;description&gt;{{ site.description | xml_escape }}&lt;/description&gt;\t\t        &lt;link&gt;{{ site.url }}{{ site.baseurl }}/&lt;/link&gt;\t\t&lt;atom:link href=\"{{ \"/allfeed.xml\" | prepend: site.baseurl | prepend: site.url }}\" rel=\"self\" type=\"application/rss+xml\" /&gt;        &lt;pubDate&gt;{{ site.time | date_to_rfc822 }}&lt;/pubDate&gt;        &lt;lastBuildDate&gt;{{ site.time | date_to_rfc822 }}&lt;/lastBuildDate&gt;        &lt;generator&gt;Jekyll v{{ jekyll.version }}&lt;/generator&gt;        {% for post in site.posts %}            &lt;item&gt;                &lt;title&gt;{{ post.title | xml_escape }}&lt;/title&gt;            {% if post.author %}                &lt;dc:creator&gt;{{ post.author | xml_escape }}&lt;/dc:creator&gt;            {% endif %}                &lt;description&gt;{{ post.content | xml_escape }}&lt;/description&gt;                &lt;pubDate&gt;{{ post.date | date: \"%a, %d %b %Y %H:%M:%S %z\" }}&lt;/pubDate&gt;                &lt;link&gt;{{ post.url | prepend: site.baseurl | prepend: site.url }}&lt;/link&gt;                &lt;guid isPermaLink=\"true\"&gt;{{ post.url | prepend: site.baseurl | prepend: site.url }}&lt;/guid&gt;            {% for category in post.categories %}                &lt;category&gt;{{ category }}&lt;/category&gt;            {% endfor %}            {% for tag in post.tags %}                &lt;category&gt;{{ tag | xml_escape }}&lt;/category&gt;            {% endfor %}            &lt;/item&gt;        {% endfor %}    &lt;/channel&gt;&lt;/rss&gt;要使用Azure Search，就必须先为它建立索引结构。让我们先了解一下Azure Search可通过两种方法在数据中填充索引。 第一种方法是使用 Azure 搜索 REST API 或 .NET SDK 将数据手动推送至索引。 第二种方法是将支持的数据源指向索引，让 Azure 搜索自动提取数据。将数据上传到Azure Search配置Azure Search  参考资料：      Add Search to a Jekyll Blog for Free with Azure Search  ",
-        "url": "/azure/2017/02/01/Azure-Search/"
-      }
-      ,
-    
-      "e4-bb-a3-e7-a0-81-e8-bf-b7-e5-ae-ab-2017-01-24-second-blog": {
-        "title": "第二篇博客",
-        "author": "Hollis Yao",
-        "category": "代码迷宫",
-        "date": "2017-01-24 00:00:00 +0800",
-        "content": "第二篇第一点讲点啥呢第二点",
-        "url": "/%E4%BB%A3%E7%A0%81%E8%BF%B7%E5%AE%AB/2017/01/24/Second-Blog/"
-      }
-      ,
-    
-      "e8-83-a1-e8-a8-80-e4-b9-b1-e8-af-ad-2017-01-23-first-blog": {
-        "title": "第一篇博客",
-        "author": "Hollis Yao",
-        "category": "胡言乱语",
-        "date": "2017-01-23 00:00:00 +0800",
-        "content": "第一篇第一点讲点啥呢第二点",
-        "url": "/%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/2017/01/23/First-Blog/"
-      }
-      
-    
-  };
-</script>
-<script src="/js/lunr.min.js"></script>
-<script src="/js/search.js"></script>
-
+<!-- USE SIDEBAR -->
+    <!-- PostList Container -->
+		<div class="
+			col-lg-8 col-lg-offset-1
+			col-md-8 col-md-offset-1
+			col-sm-12
+			col-xs-12
+			postlist-container
+		">
+			<!-- 分类列表中所有的文章清单 -->
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="Azure">
+                    <span class="tag-text">Azure</span>
+                </span>
+				
+				 <div class="post-preview">
+				    <a href="/azure/2017/02/01/Azure-Search/">
+				        <h2 class="post-title">
+                            <i>[draft]</i> 撸Azure羊毛之Azure Search
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            论免费使用Azure Search为Jekyll提供全文搜索能力的正确姿势
+				        </h3>
+				        
+				    </a>
+				    <p class="post-meta">2017-02-01</p>
+				</div>
+				<hr>
+				
 			</div>
+			
+			
+		</div>
+<!-- Sidebar Container -->
+		<div class="
+			col-lg-3 col-lg-offset-0
+			col-md-3 col-md-offset-0
+			col-sm-12
+			col-xs-12
+			sidebar-container
+		">
+
+			
+			<section>
+				<hr class="hidden-sm hidden-xs">
+				<h5><a href="/categories/">CATEGORIES</a></h5>
+				<ul class="sidebar">
+					<!--<li><a class="sidebar-btn" href="" data-category="all">all</a></li>-->
+					
+							
+								<li>
+									<a class="sidebar-btn" href="/categories/%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD" data-category="胡言乱语">胡言乱语 (1)
+									</a>
+								</li>
+							
+					
+							
+								<li>
+									<a class="sidebar-btn" href="/categories/%E4%BB%A3%E7%A0%81%E8%BF%B7%E5%AE%AB" data-category="代码迷宫">代码迷宫 (1)
+									</a>
+								</li>
+							
+					
+							
+								<li>
+									<a class="sidebar-btn" href="/categories/Azure" data-category="Azure">Azure (1)
+									</a>
+								</li>
+							
+					
+				</ul>
+			</section>
+			
+			
 		</div>
 	</div>
 </div>
