@@ -37,39 +37,45 @@ Azure分为全球版和中国版，都有很多免费使用的方式，足够大
 
 #### 准备要搜索的数据
 为了让Azure Search能搜索全站的文章，我们必须把所有文章的数据集合到一个文件中。Jekyll有一个官方插件jekyll-feed，可以把所有文章用一个RSS形式整理起来，作为一个RSS订阅给用户使用。但是，这里面生成的RSS文件，对于文章正文内容只有摘要，没有全部内容，所以我们需要略微改写。参考了[all.xml](https://github.com/anthonychu/jekyll-azure-search-demo/blob/master/jekyll-rss-feed/all.xml "all.xml"),再根据我的博客配置情况作了修改：
-1. 禁止了集成config.xml全局设置
-2. 修正了两个bug
+1. 禁止了继承config.xml的全局设置
+2. 修正了几个bug，并调整了一些格式
 
-```html
+```liquid{% raw %}
 ---
 layout: null #禁用掉全局模板页的设置, added by Hollis Yao
 ---
 
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
-	<channel>
-		<title>{{ site.title | xml_escape }}</title>
-		<description>{% if site.description %}{{ site.description | xml_escape }}{% endif %}</description>		
-		<link>{{ site.url }}</link>
-		<atom:link href="{{ site.url }}/feed/rss/" rel="self" type="application/rss+xml" />
-		{% for post in site.posts %}
-			<item>
-				<title>{{ post.title | xml_escape }}</title>
-			{% if post.author %}
-				<dc:creator>{{ post.author | xml_escape }}</dc:creator>
-			{% endif %}
-				<description>{{ post.content | xml_escape }}</description>
-				<pubDate>{{ post.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
-				<link>{{ site.url }}{{ post.url }}</link>
-				<guid isPermaLink="true">{{ site.url }}{{ post.url }}</guid>
-			{% for category in post.categories %}
-				<category>{{ category }}</category>
-			{% endfor %}
-			</item>
-		{% endfor %}
-	</channel>
+    <channel>
+        <title>{{ site.title | xml_escape }}</title>
+        <description>{{ site.description | xml_escape }}</description>		
+        <link>{{ site.url }}{{ site.baseurl }}/</link>
+		<atom:link href="{{ "/allfeed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml" />
+        <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
+        <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+        <generator>Jekyll v{{ jekyll.version }}</generator>
+        {% for post in site.posts %}
+            <item>
+                <title>{{ post.title | xml_escape }}</title>
+            {% if post.author %}
+                <dc:creator>{{ post.author | xml_escape }}</dc:creator>
+            {% endif %}
+                <description>{{ post.content | xml_escape }}</description>
+                <pubDate>{{ post.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
+                <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
+                <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
+            {% for category in post.categories %}
+                <category>{{ category }}</category>
+            {% endfor %}
+            {% for tag in post.tags %}
+                <category>{{ tag | xml_escape }}</category>
+            {% endfor %}
+            </item>
+        {% endfor %}
+    </channel>
 </rss>
-```
+```{% endraw %}
 
 要使用Azure Search，就必须先为它建立索引结构。
 让我们先了解一下Azure Search

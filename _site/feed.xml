@@ -5,9 +5,9 @@
     <description>架构师 | 羽毛球爱好者 | 这里是 Hollis Yao 的个人博客，用代码调戏人生。</description>
     <link>http://hollisyao.me/</link>
     <atom:link href="http://hollisyao.me/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 31 Jan 2017 19:40:29 +0800</pubDate>
-    <lastBuildDate>Tue, 31 Jan 2017 19:40:29 +0800</lastBuildDate>
-    <generator>Jekyll v3.3.1</generator>
+    <pubDate>Wed, 01 Feb 2017 10:49:52 +0800</pubDate>
+    <lastBuildDate>Wed, 01 Feb 2017 10:49:52 +0800</lastBuildDate>
+    <generator>Jekyll v3.4.0</generator>
     
       <item>
         <title>撸Azure羊毛之Azure Search</title>
@@ -41,84 +41,44 @@
 &lt;h4 id=&quot;准备要搜索的数据&quot;&gt;准备要搜索的数据&lt;/h4&gt;
 &lt;p&gt;为了让Azure Search能搜索全站的文章，我们必须把所有文章的数据集合到一个文件中。Jekyll有一个官方插件jekyll-feed，可以把所有文章用一个RSS形式整理起来，作为一个RSS订阅给用户使用。但是，这里面生成的RSS文件，对于文章正文内容只有摘要，没有全部内容，所以我们需要略微改写。参考了&lt;a href=&quot;https://github.com/anthonychu/jekyll-azure-search-demo/blob/master/jekyll-rss-feed/all.xml&quot; title=&quot;all.xml&quot;&gt;all.xml&lt;/a&gt;,再根据我的博客配置情况作了修改：&lt;/p&gt;
 &lt;ol&gt;
-  &lt;li&gt;禁止了集成config.xml全局设置&lt;/li&gt;
-  &lt;li&gt;修正了两个bug&lt;/li&gt;
+  &lt;li&gt;禁止了继承config.xml的全局设置&lt;/li&gt;
+  &lt;li&gt;修正了几个bug，并调整了一些格式&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;---
+&lt;div class=&quot;language-liquid highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;---
 layout: null #禁用掉全局模板页的设置, added by Hollis Yao
 ---
 
-&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;rss&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;version=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;2.0&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:atom=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.w3.org/2005/Atom&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:dc=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://purl.org/dc/elements/1.1/&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;channel&amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;Hollis's Blog&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;nt&quot;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;架构师 | 羽毛球爱好者 | 这里是 Hollis Yao 的个人博客，用代码调戏人生。&lt;span class=&quot;nt&quot;&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;		
-		&lt;span class=&quot;nt&quot;&gt;&amp;lt;link&amp;gt;&lt;/span&gt;http://hollisyao.me&lt;span class=&quot;nt&quot;&gt;&amp;lt;/link&amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;nt&quot;&gt;&amp;lt;atom:link&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://hollisyao.me/feed/rss/&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rel=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;self&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;application/rss+xml&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-		
-			&lt;span class=&quot;nt&quot;&gt;&amp;lt;item&amp;gt;&lt;/span&gt;
-				&lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;撸Azure羊毛之Azure Search&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
-			
-				&lt;span class=&quot;nt&quot;&gt;&amp;lt;dc:creator&amp;gt;&lt;/span&gt;Hollis Yao&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dc:creator&amp;gt;&lt;/span&gt;
-			
-				&lt;span class=&quot;nt&quot;&gt;&amp;lt;description&amp;gt;&lt;/span&gt;&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt; *2017年我最重要的目标之一就是**坚持**写博客。*
-
-作为一个（自诩😝）全栈攻城狮，写博客这么一件稀松平常的事情，也不能写得太平常了。
-
-首先，要构建一个适合Geeker的高逼格的个人博客，一定不是博客园、CSDN，也不是现在比较流行的简书。所以，在死了很多脑细胞之后，最终选定了Github+Jekyll，来构建高效、静态的独立个人站点，并且用最适合码字的Markdown书写。
-
-当然，因为这是一个静态博客的平台，为了让它能有各种动态酷炫的效果，我也是操碎心了，虽然借用了别人的模板，但也是爬了各种坑，到最后，还添加了我需要的分类、搜索、草稿文章标识等功能。
-
-然而，程序猿总是有点洁癖和强迫症的，lunr.js的搜索对中文的支持实在是不堪，在没有服务器端的支持下，只能对中文进行简单搜索，还是无法支持中文分词。转念一想，我软有一个这么强大的搜索服务，为什么不能做一个整合呢。再一研究，居然免费版也足够我使用，心动不如行动，于是乎，就有了我这第一篇博客。
-
-#### Azure背景简述
-Azure分为全球版和中国版，都有很多免费使用的方式，足够大家针对开发、测试和小型应用场景。以下渠道可以试用Azure：  
-1. 全球版，免费注册，送200美金额度；中国版，一元注册试用账号，1500元人民币额度。  
-2. MSDN订阅可以免费获取全球版25美金/月的额度。  
-3. 微软员工可以免费获取全球版150美金/月的额度。  
-目前Azure Search只在全球版Azure提供，将来也会进入中国。
-
-#### 创建Azure Search服务
-打开浏览器，输入portal.azure.com，进入Azure全球版管理门户，登陆之后，进入主界面，依次按照下图所示点击
-![](/img/posts/Azure-Search-1.jpg)
-在新建搜索服务输入相关信息，确保选中免费定价级别的服务即可，检查输入信息完毕之后，点击创建，稍等片刻，搜索服务即创建完成。
-![](/img/posts/Azure-Search-2.jpg)
-
-#### 准备要搜索的数据
-为了让Azure Search能搜索全站的文章，我们必须把所有文章的数据集合到一个文件中。Jekyll有一个官方插件jekyll-feed，可以把所有文章用一个RSS形式整理起来，作为一个RSS订阅给用户使用。但是，这里面生成的RSS文件，对于文章正文内容只有摘要，没有全部内容，所以我们需要略微改写。参考了[all.xml](https://github.com/anthonychu/jekyll-azure-search-demo/blob/master/jekyll-rss-feed/all.xml &lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;all.xml&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;),再根据我的博客配置情况作了修改：
-1. 禁止了集成config.xml全局设置
-2. 修正了两个bug
-
-```html
----
-layout: null #禁用掉全局模板页的设置, added by Hollis Yao
----
-
-&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;?xml version=&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;1.0&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt; encoding=&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;UTF-8&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;?&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;rss version=&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;2.0&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt; xmlns:atom=&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;http://www.w3.org/2005/Atom&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt; xmlns:dc=&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;http://purl.org/dc/elements/1.1/&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&amp;amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;channel&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;title&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;{{ site.title | xml_escape }}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/title&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;description&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;{% if site.description %}{{ site.description | xml_escape }}{% endif %}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/description&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;		
-		&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;link&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;{{ site.url }}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/link&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;atom:link href=&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;{{ site.url }}/feed/rss/&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt; rel=&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;self&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt; type=&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;application/rss+xml&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt; /&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-		{% for post in site.posts %}
-			&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;item&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-				&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;title&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;{{ post.title | xml_escape }}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/title&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-			{% if post.author %}
-				&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;dc:creator&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;{{ post.author | xml_escape }}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/dc:creator&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-			{% endif %}
-				&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;description&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;{{ post.content | xml_escape }}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/description&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-				&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;pubDate&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;{{ post.date | date: &lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;%a, %d %b %Y %H:%M:%S %z&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt; }}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/pubDate&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-				&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;link&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;{{ site.url }}{{ post.url }}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/link&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-				&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;guid isPermaLink=&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&lt;/span&gt;true&lt;span class=&quot;ni&quot;&gt;&amp;amp;quot;&amp;amp;gt;&lt;/span&gt;{{ site.url }}{{ post.url }}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/guid&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-			{% for category in post.categories %}
-				&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;category&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;{{ category }}&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/category&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-			{% endfor %}
-			&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/item&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-		{% endfor %}
-	&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/channel&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
-&lt;span class=&quot;ni&quot;&gt;&amp;amp;lt;&lt;/span&gt;/rss&lt;span class=&quot;ni&quot;&gt;&amp;amp;gt;&lt;/span&gt;
+&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
+&amp;lt;rss version=&quot;2.0&quot; xmlns:atom=&quot;http://www.w3.org/2005/Atom&quot; xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;&amp;gt;
+    &amp;lt;channel&amp;gt;
+        &amp;lt;title&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;xml_escape&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/title&amp;gt;
+        &amp;lt;description&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;xml_escape&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/description&amp;gt;		
+        &amp;lt;link&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;baseurl&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;/&amp;lt;/link&amp;gt;
+		&amp;lt;atom:link href=&quot;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/allfeed.xml&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;site.baseurl&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;site.url&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&quot; rel=&quot;self&quot; type=&quot;application/rss+xml&quot; /&amp;gt;
+        &amp;lt;pubDate&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;date_to_rfc822&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/pubDate&amp;gt;
+        &amp;lt;lastBuildDate&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;date_to_rfc822&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/lastBuildDate&amp;gt;
+        &amp;lt;generator&amp;gt;Jekyll v&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;jekyll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/generator&amp;gt;
+        &lt;span class=&quot;p&quot;&gt;{%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;post&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;in&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;site.posts&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%}&lt;/span&gt;
+            &amp;lt;item&amp;gt;
+                &amp;lt;title&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;xml_escape&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/title&amp;gt;
+            &lt;span class=&quot;p&quot;&gt;{%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%}&lt;/span&gt;
+                &amp;lt;dc:creator&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;xml_escape&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/dc:creator&amp;gt;
+            &lt;span class=&quot;p&quot;&gt;{%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;endif&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%}&lt;/span&gt;
+                &amp;lt;description&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;xml_escape&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/description&amp;gt;
+                &amp;lt;pubDate&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;%a, %d %b %Y %H:%M:%S %z&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/pubDate&amp;gt;
+                &amp;lt;link&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;site.baseurl&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;site.url&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/link&amp;gt;
+                &amp;lt;guid isPermaLink=&quot;true&quot;&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;site.baseurl&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;site.url&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/guid&amp;gt;
+            &lt;span class=&quot;p&quot;&gt;{%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;category&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;in&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;post.categories&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%}&lt;/span&gt;
+                &amp;lt;category&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;category&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/category&amp;gt;
+            &lt;span class=&quot;p&quot;&gt;{%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;endfor&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;tag&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;in&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;post.tags&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%}&lt;/span&gt;
+                &amp;lt;category&amp;gt;&lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;xml_escape&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&amp;lt;/category&amp;gt;
+            &lt;span class=&quot;p&quot;&gt;{%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;endfor&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%}&lt;/span&gt;
+            &amp;lt;/item&amp;gt;
+        &lt;span class=&quot;p&quot;&gt;{%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;endfor&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;%}&lt;/span&gt;
+    &amp;lt;/channel&amp;gt;
+&amp;lt;/rss&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
@@ -130,78 +90,6 @@ layout: null #禁用掉全局模板页的设置, added by Hollis Yao
 
 &lt;h4 id=&quot;配置azure-search&quot;&gt;配置Azure Search&lt;/h4&gt;
 
-&lt;p&gt;&amp;gt;参考资料：
-&amp;gt;
-&amp;gt;- &lt;a href=&quot;http://anthonychu.ca/post/add-search-to-jekyll-blog-free-azure-search/ &amp;quot;Add Search to a Jekyll Blog for Free with Azure Search&amp;quot;&quot;&gt;Add Search to a Jekyll Blog for Free with Azure Search&lt;/a&gt;
-&amp;lt;/description&amp;gt;
-				&lt;pubDate&gt;Tue, 31 Jan 2017 19:40:23 +0800&lt;/pubDate&gt;
-				&lt;link /&gt;http://hollisyao.me/azure/2017/01/31/Azure-Search/&amp;lt;/link&amp;gt;
-				&lt;guid isPermaLink=&quot;true&quot;&gt;http://hollisyao.me/azure/2017/01/31/Azure-Search/&lt;/guid&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;			&amp;lt;category&amp;gt;Azure&amp;lt;/category&amp;gt;
-		
-		&amp;lt;/item&amp;gt;
-	
-		&amp;lt;item&amp;gt;
-			&amp;lt;title&amp;gt;第二篇博客&amp;lt;/title&amp;gt;
-		
-			&amp;lt;dc:creator&amp;gt;Hollis Yao&amp;lt;/dc:creator&amp;gt;
-		
-			&amp;lt;description&amp;gt;&amp;amp;lt;h1 id=&amp;amp;quot;第二篇&amp;amp;quot;&amp;amp;gt;第二篇&amp;amp;lt;/h1&amp;amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&amp;lt;h2 id=&quot;第一点&quot;&amp;gt;第一点&amp;lt;/h2&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;&amp;lt;p&amp;gt;讲点啥呢&amp;lt;/p&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;&amp;lt;h2 id=&quot;第二点&quot;&amp;gt;第二点&amp;lt;/h2&amp;gt;
-&amp;lt;/description&amp;gt;
-				&lt;pubDate&gt;Tue, 24 Jan 2017 00:00:00 +0800&lt;/pubDate&gt;
-				&lt;link /&gt;http://hollisyao.me/%E4%BB%A3%E7%A0%81%E8%BF%B7%E5%AE%AB/2017/01/24/Second-Blog/&amp;lt;/link&amp;gt;
-				&lt;guid isPermaLink=&quot;true&quot;&gt;http://hollisyao.me/%E4%BB%A3%E7%A0%81%E8%BF%B7%E5%AE%AB/2017/01/24/Second-Blog/&lt;/guid&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;			&amp;lt;category&amp;gt;代码迷宫&amp;lt;/category&amp;gt;
-		
-		&amp;lt;/item&amp;gt;
-	
-		&amp;lt;item&amp;gt;
-			&amp;lt;title&amp;gt;第一篇博客&amp;lt;/title&amp;gt;
-		
-			&amp;lt;dc:creator&amp;gt;Hollis Yao&amp;lt;/dc:creator&amp;gt;
-		
-			&amp;lt;description&amp;gt;&amp;amp;lt;h1 id=&amp;amp;quot;第一篇&amp;amp;quot;&amp;amp;gt;第一篇&amp;amp;lt;/h1&amp;amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&amp;lt;h2 id=&quot;第一点&quot;&amp;gt;第一点&amp;lt;/h2&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;&amp;lt;p&amp;gt;讲点啥呢&amp;lt;/p&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;&amp;lt;h2 id=&quot;第二点&quot;&amp;gt;第二点&amp;lt;/h2&amp;gt;
-&amp;lt;/description&amp;gt;
-				&lt;pubDate&gt;Mon, 23 Jan 2017 00:00:00 +0800&lt;/pubDate&gt;
-				&lt;link /&gt;http://hollisyao.me/%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/2017/01/23/First-Blog/&amp;lt;/link&amp;gt;
-				&lt;guid isPermaLink=&quot;true&quot;&gt;http://hollisyao.me/%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/2017/01/23/First-Blog/&lt;/guid&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;			&amp;lt;category&amp;gt;胡言乱语&amp;lt;/category&amp;gt;
-		
-		&amp;lt;/item&amp;gt;
-	
-&amp;lt;/channel&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;&amp;lt;/rss&amp;gt;
-```&lt;/p&gt;
-
-&lt;p&gt;要使用Azure Search，就必须先为它建立索引结构。
-让我们先了解一下Azure Search
-可通过两种方法在数据中填充索引。 第一种方法是使用 Azure 搜索 REST API 或 .NET SDK 将数据手动推送至索引。 第二种方法是将支持的数据源指向索引，让 Azure 搜索自动提取数据。&lt;/p&gt;
-
-&lt;h4 id=&quot;将数据上传到azure-search-1&quot;&gt;将数据上传到Azure Search&lt;/h4&gt;
-
-&lt;h4 id=&quot;配置azure-search-1&quot;&gt;配置Azure Search&lt;/h4&gt;
-
 &lt;blockquote&gt;
   &lt;p&gt;参考资料：&lt;/p&gt;
 
@@ -210,9 +98,9 @@ layout: null #禁用掉全局模板页的设置, added by Hollis Yao
   &lt;/ul&gt;
 &lt;/blockquote&gt;
 </description>
-        <pubDate>Tue, 31 Jan 2017 19:40:23 +0800</pubDate>
-        <link>http://hollisyao.me/azure/2017/01/31/Azure-Search/</link>
-        <guid isPermaLink="true">http://hollisyao.me/azure/2017/01/31/Azure-Search/</guid>
+        <pubDate>Wed, 01 Feb 2017 10:46:27 +0800</pubDate>
+        <link>http://hollisyao.me/azure/2017/02/01/Azure-Search/</link>
+        <guid isPermaLink="true">http://hollisyao.me/azure/2017/02/01/Azure-Search/</guid>
         
         <category>Azure Search</category>
         
