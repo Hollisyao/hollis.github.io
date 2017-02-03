@@ -75,10 +75,24 @@ layout: null #禁用掉全局模板页的设置, added by Hollis Yao
 在这个章节里面，我们会创建Azure Search服务，并进行相关配置，以便搜索服务能够正常运行在博客网站。
 接下来的配置会基于Node.js的环境来运行，所以必须先在本地安装Node.js环境。
 
-##### 在Windows 10安装Node.js
+##### 在Windows 10安装配置Node.js
 进入官网[https://nodejs.org/en/](https://nodejs.org/en/ "https://nodejs.org/en/")，找到LTS版本，点击下载，得到安装文件之后，一路Next，安装完毕。
 进入cmd，执行一些测试验证node.js安装成功。
 ![](/img/posts/Azure-Search-3.jpg)
+###### 配置Node.js
+npm是node.js模块管理插件，也是node如此大红大紫最重要的工具，所以我们必须系统的配置好npm，让它更好的发挥作用。  
+1. 配置npm的全局模块和cache路径，在在nodejs的安装目录中新建文件夹：node_global和node_cache。
+![](/img/posts/Azure-Search-4.jpg)
+2. 在cmd中输入以下命令：设置对应的路径映射。
+```node
+npm config set prefix "C:\Program Files\nodejs\node_global"
+npm config set cache "C:\Program Files\nodejs\node_cache"
+```
+3. 尝试安装express模块，在命令行中输入：npm install express -g (-g表示全局安装即安装到node_global目录下)。
+4. 查看系统环境变量：鼠标右键单击我的电脑→属性→高级系统设置→环境变量→在系统变量下新建**NODE_PATH**并输入"C:\Program Files\nodejs\node_global\node_modules"。
+5. 重新打开cmd，让刚才设置的系统变量生效，输入node，然后再输入"require('express')"测试node模块的全局路径是否配置正确。
+至此，npm的配置即完成了。
+
 
 ##### 创建Azure Search服务
 打开浏览器，输入portal.azure.com，进入Azure全球版管理门户，登陆之后，进入主界面，依次按照下图所示点击
@@ -168,15 +182,32 @@ searchClient.deleteIndex(indexName, function (err) {
 ```
 完整的代码请参考[azure-sync.js](https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-sync.js "azure-sync")
 
-接下来，在本机执行下面这段node.js脚本，把数据提交给Azure Search索引
+接下来，在本机执行下面这段node.js脚本，先通过npm安装依赖的模块，然后把数据提交给Azure Search索引。
 ```node
-$ node azure-sync.js --rss <RSS_PATH> --search-url <URL> --search-key <KEY>
+npm install feedparser -g
+npm install fs -g
+npm install string -g
+npm install azure-search -g
+npm install async-each-series -g
+npm install minimist -g
+node azure-sync.js --rss <RSS_PATH> --search-url <URL> --search-key <KEY>
 ```
 >RSS_PATH：rss文件路径；URL：Azure Search的URL；KEY：azure search的key。
-我的Azure Search URL是：https://hollisblog.search.windows.net
 
+Azure Search 的URl如下图
+![](/img/posts/Azure-Search-5.jpg)
+Azure Search 的Key如下图
+![](/img/posts/Azure-Search-6.png)
+我的环境中的示例命令如下：
+```node
+node C:\Users\holyao\Documents\GitHub\hollisyao.github.io\js\azure-sync.js --rss C:\Users\holyao\Documents\GitHub\hollisyao.github.io\_site\allfeed.xml --search-url https://hollisblog.search.windows.net --search-key XXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+>我的search-key可不能告诉你们
 
-上面这段脚本必须在每次新增或者修改文章之后，被执行一次，以便更新Azure Search的索引。
+上面这段脚本必须在每次新增或者修改文章之后，被执行一次，用来重新创建Azure Search索引。
+在本机执行完毕这段脚本之后，在Azure Portal中查看，已经能看到索引被创建，并且有三篇测试博客被索引了。
+![](/img/posts/Azure-Search-7.png)
+
 
 ##### 搜索索引
 最后一步，就是在Jekyll网站中，添加一个页面，用客户端的Javascript脚本来搜索Azure Search的索引数据。

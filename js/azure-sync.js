@@ -16,6 +16,7 @@ var searchClient = AzureSearch({
     url: searchUrl,
     key: searchKey,
     version: '2016-09-01'
+	//version: '2015-02-28-preview'
 });
 
 
@@ -51,7 +52,8 @@ function feedparserReadItem() {
     var item, slug;
     
     while (item = stream.read()) {
-        slug = item.link.substring(item.link.lastIndexOf('/') + 1);
+        slug = item.link.substring(0, item.link.length-1);//生成的路径最后带/，所以要去掉
+		slug = slug.substring(slug.lastIndexOf('/') + 1);
         posts.push({
             id: slug, 
             title: item.title, 
@@ -64,7 +66,7 @@ function feedparserReadItem() {
 }
 
 function rebuildSearchIndex(posts) {
-    var indexName = 'blog-posts';
+    var indexName = 'blog-posts'; //index's name on Azure Search
     
     var schema = {
         name: indexName,
@@ -159,6 +161,7 @@ function rebuildSearchIndex(posts) {
             
             each(posts, function(post, next) {
                 console.log('Adding', post.title, '...')
+				//console.log('post value', [post]);
                 searchClient.addDocuments(indexName, [post], function (err, details) {
                     console.log(err || (details.length && details[0].status ? 'OK' : 'failed'));
                     next(err, details);
