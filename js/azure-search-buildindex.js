@@ -16,7 +16,6 @@ var searchClient = AzureSearch({
     url: searchUrl,
     key: searchKey,
     version: '2016-09-01'
-	//version: '2015-02-28-preview'
 });
 
 
