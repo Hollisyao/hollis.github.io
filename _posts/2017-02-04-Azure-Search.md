@@ -13,8 +13,8 @@ tags:
     - Jekyll
 ---
 > *2017年我最重要的目标之一就是**坚持**写博客。*  
-> 本文技术栈：Jekyll, liquid, Azure Search, Node.js, html, javascript, xml  
-> 阅读本文默认为已经具备Node.js和Jekyll技能。 
+> 本文技术栈：Jekyll, liquid, Azure Search, Node.js, html, javascript, xml。  
+> 坚持阅读本文默认为已经具备以上技术栈，否则后果不负。
 
 作为一个（自诩😝）全栈攻城狮，写博客这么一件稀松平常的事情，也不能写得太平常了。
 
