@@ -13,7 +13,9 @@
 
 
     function search(query, callback) {
-        var searchOptions = { search: query, 'select': 'id, title, url, date, content' };
+        var searchOptions = { search: query, 'select': 'id, title, url, date', 
+                                             'highlight': 'title, content', 
+                                             'highlightPreTag': '<strong><em>', 'highlightPostTag': '</em></strong>' };
         client.search(indexName, searchOptions, callback);
         }
     }
@@ -26,11 +28,27 @@
       var appendString = '';
 
       for (var i = 0; i < results.length; i++) {  // Iterate over the results
-		  debugger;
         var item = results[i];
-        appendString += '<li><a href="' + item.url + '"><h3>' + item.title + '</h3></a>';
+        var title = item.title;
+		//如果标题命中了，就返回带突出显示片段，否则返回原样的标题
+        if (item["@search.highlights"].title.length > 0)
+          title = item["@search.highlights"].title["0"];
+		
+        appendString += '<li><a href="' + item.url + '"><h3>' + title + '</h3></a>';
+		
         //appendString += '<p class="post-meta">' + new Date(item.date).Format("yyyy-MM-dd") + '</p>';
-        appendString += '<p>' + item.content.substring(0, 200) + '...</p></li>';
+		
+		//判断有多少命中片段，只显示最前面的三个
+		if(item["@search.highlights"].content.length > 0)
+		{
+			for (var j = 0; j < item["@search.highlights"].content.length; j++)
+			{
+                if (j > 2) break;
+				appendString += '<p>' + item["@search.highlights"].content[j] + '......</p>';
+			}
+		}
+		
+		appendString += '</li>';
       }
 
       searchResults.innerHTML = appendString;

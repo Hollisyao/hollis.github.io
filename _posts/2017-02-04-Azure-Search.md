@@ -25,6 +25,7 @@ tags:
 然而，程序猿总是有点洁癖和强迫症的，lunr.js的搜索对中文的支持实在是不堪，在没有服务器端的支持下，只能对中文进行简单搜索，还是无法支持中文分词。转念一想，我软有一个这么强大的搜索服务，为什么不能做一个整合呢。再一研究，居然免费版也足够我使用，心动不如行动，于是乎，就有了我这第一篇博客。
 
 #### Azure背景简述
+什么叫撸羊毛？就是占便宜嘛，今天我们用Azure这样一个商业云服务，免费为我们提供全文搜索服务。
 Azure分为全球版和中国版，都有很多免费使用的方式，足够大家针对开发、测试和小型应用场景。以下渠道可以试用Azure：  
 1. 全球版，免费注册，送200美金额度；中国版，一元注册试用账号，1500元人民币额度。  
 2. MSDN订阅可以免费获取全球版25美金/月的额度。  
@@ -228,12 +229,16 @@ function BlogSearchService() {
     svc.search = search;
 
 
+    
     function search(query, callback) {
-        var searchOptions = { search: query, 'select': 'id, title, url, date, content' };
+        var searchOptions = { search: query, 'select': 'id, title, url, date', 
+                                             'highlight': 'title, content', 
+                                             'highlightPreTag': '<strong><em>', 'highlightPostTag': '</em></strong>' };
         client.search(indexName, searchOptions, callback);
         }
     }
 ```
+在这里使用了新版API的一些特性，比如highlight，就是能够突出显示命中关键字，这样只需要返回正文中命中部分就可以了，不需要返回全部的正文再截取。
 完整的代码文件在这里[azure-search-results.js](https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-search-results.js "azure-search-results.js")  （我的key还是暴露了 ）  
 在上面的代码中用到了AzureSearch对象，这是一个nodejs对象，大家想想看，如果在纯客户端环境中，它还能执行吗？所以，在这里我们要使用azure-search的浏览器版本，浏览器版本可以在这下载，[azure-search.min.js](https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-search.min.js "azure-search.min.js")
 
@@ -287,6 +292,10 @@ description: "Search Center"
 azuresearch: true  #是否启用Azure Search搜索
 ```
 到这里，所有的配置工作已经结束，你也可以在我的博客网站看到实际的效果。
+![](/img/posts/Azure-Search-8.png)
+
+----------
+
 >参考资料：
 >
 >- [Add Search to a Jekyll Blog for Free with Azure Search](http://anthonychu.ca/post/add-search-to-jekyll-blog-free-azure-search/ "Add Search to a Jekyll Blog for Free with Azure Search")
