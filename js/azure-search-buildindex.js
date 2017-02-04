@@ -50,16 +50,16 @@ function feedparserReadItem() {
     var meta = stream.meta;
     var item, slug;
     
-    while (item = stream.read()) {
+    while (item = stream.read()) {		
         slug = item.link.substring(0, item.link.length-1);//生成的路径最后带/，所以要去掉
 		slug = slug.substring(slug.lastIndexOf('/') + 1);
         posts.push({
             id: slug, 
             title: item.title, 
             content: S(item.description).stripTags().decodeHTMLEntities().s,
-            link: item.link,
+            url: item.link,
             categories: item.categories,
-            pubdate: item.pubdate
+            date: item.pubDate
         });
     }
 }
@@ -103,7 +103,7 @@ function rebuildSearchIndex(posts) {
                 analyzer: 'en.microsoft'
             },
             { 
-                name: 'link',
+                name: 'url',
                 type: 'Edm.String',
                 searchable: false,
                 filterable: false,
@@ -123,7 +123,7 @@ function rebuildSearchIndex(posts) {
                 key: false 
             },
             { 
-                name: 'pubdate',
+                name: 'date',
                 type: 'Edm.DateTimeOffset',
                 searchable: false,
                 filterable: true,

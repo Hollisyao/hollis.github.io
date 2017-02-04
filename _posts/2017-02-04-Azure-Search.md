@@ -3,7 +3,7 @@ layout:     post
 title:      "撸Azure羊毛之Azure Search"
 subtitle:   "论免费使用Azure Search为Jekyll提供全文搜索能力的正确姿势"
 author:     "Hollis Yao"
-header-img: ""
+header-img: "img/posts/Azure-Search-Header.png"
 catalog: true
 categories: 
     - Azure
@@ -12,7 +12,9 @@ tags:
     - Azure Search
     - Jekyll
 ---
-> *2017年我最重要的目标之一就是**坚持**写博客。*
+> *2017年我最重要的目标之一就是**坚持**写博客。*  
+> 本文技术栈：Jekyll, liquid, Azure Search, Node.js, html, javascript, xml  
+> 阅读本文默认为已经具备Node.js和Jekyll技能。 
 
 作为一个（自诩😝）全栈攻城狮，写博客这么一件稀松平常的事情，也不能写得太平常了。
 
@@ -70,6 +72,7 @@ layout: null #禁用掉全局模板页的设置, added by Hollis Yao
     </channel>
 </rss>
 ```{% endraw %}
+完整文件在这里[allfeed.xml](https://github.com/hollisyao/hollisyao.github.io/blob/dev/allfeed.xml "allfeed.xml")
 
 #### 配置Azure Search
 在这个章节里面，我们会创建Azure Search服务，并进行相关配置，以便搜索服务能够正常运行在博客网站。
@@ -180,7 +183,7 @@ searchClient.deleteIndex(indexName, function (err) {
     });
 });
 ```
-完整的代码请参考[azure-sync.js](https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-sync.js "azure-sync")
+完整的代码请参考[azure-search-buildindex.js](https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-search-buildindex.js "azure-search-buildindex")
 
 接下来，在本机执行下面这段node.js脚本，先通过npm安装依赖的模块，然后把数据提交给Azure Search索引。
 ```node
@@ -190,7 +193,7 @@ npm install string -g
 npm install azure-search -g
 npm install async-each-series -g
 npm install minimist -g
-node azure-sync.js --rss <RSS_PATH> --search-url <URL> --search-key <KEY>
+node azure-search-buildindex.js --rss <RSS_PATH> --search-url <URL> --search-key <KEY>
 ```
 >RSS_PATH：rss文件路径；URL：Azure Search的URL；KEY：azure search的key。
 
@@ -200,7 +203,7 @@ Azure Search 的Key如下图
 ![](/img/posts/Azure-Search-6.png)
 我的环境中的示例命令如下：
 ```node
-node C:\Users\holyao\Documents\GitHub\hollisyao.github.io\js\azure-sync.js --rss C:\Users\holyao\Documents\GitHub\hollisyao.github.io\_site\allfeed.xml --search-url https://hollisblog.search.windows.net --search-key XXXXXXXXXXXXXXXXXXXXXXXXXX
+node C:\Users\holyao\Documents\GitHub\hollisyao.github.io\js\azure-search-buildindex.js --rss C:\Users\holyao\Documents\GitHub\hollisyao.github.io\_site\allfeed.xml --search-url https://hollisblog.search.windows.net --search-key XXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 >我的search-key可不能告诉你们
 
@@ -211,8 +214,79 @@ node C:\Users\holyao\Documents\GitHub\hollisyao.github.io\js\azure-sync.js --rss
 
 ##### 搜索索引
 最后一步，就是在Jekyll网站中，添加一个页面，用客户端的Javascript脚本来搜索Azure Search的索引数据。
+我先来写这个客户端脚本，我把它命名为：azure-search-results.js，关键代码如下：  
+```javascript
+function BlogSearchService() {
+    var svc = this;
+    var indexName = 'blog-posts';
+    var client = AzureSearch({
+            url: 'https://hollisblog.search.windows.net',
+            key:'XXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+            version: '2016-09-01'
+        });
+	//define a search property for BlogSearchService class
+    svc.search = search;
 
 
+    function search(query, callback) {
+        var searchOptions = { search: query, 'select': 'id, title, url, date, content' };
+        client.search(indexName, searchOptions, callback);
+        }
+    }
+```
+完整的代码文件在这里[azure-search-results.js](https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-search-results.js "azure-search-results.js")  （我的key还是暴露了 ）  
+在上面的代码中用到了AzureSearch对象，这是一个nodejs对象，大家想想看，如果在纯客户端环境中，它还能执行吗？所以，在这里我们要使用azure-search的浏览器版本，浏览器版本可以在这下载，[azure-search.min.js](https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-search.min.js "azure-search.min.js")
+
+脚本配置完毕之后，我们来写搜索的html页面，代码如下：
+```liquid{% raw %}
+---
+title: Search
+layout: search
+description: "Search Center"
+---
+<form action="/search" method="get" class="bs-example bs-example-form">
+  <!--<label for="search-box" style="display:hidden;">Search</label>-->
+  <div class="input-group">
+	  <input type="text" id="search-box" name="query" class="form-control" placeholder="What are you looking for"/>
+	  <span class="input-group-addon" style="padding: 0px;">
+		<input type="submit" value="Search" class="btn btn-primary" style="padding: 3.5px 20px;"/>
+	  </span>
+	  
+  </div>
+</form>
+
+<ul id="search-results"></ul>
+
+{% if site.azuresearch %}
+<script src="/js/azure-search.min.js"></script>
+<script src="/js/azure-search-results.js"></script>
+{% else %}
+<script>
+  window.store = {
+    {% for post in site.posts %}
+      "{{ post.url | slugify }}": {
+        "title": "{{ post.title | xml_escape }}",
+        "author": "{{ post.author | xml_escape }}",
+        "category": "{{ post.category | xml_escape }}",
+        "date": "{{ post.date | xml_escape }}",
+        "content": {{ post.content | strip_html | strip_newlines | jsonify }},
+        "url": "{{ post.url | xml_escape }}"
+      }
+      {% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  };
+</script>
+<script src="/js/lunr.min.js"></script>
+<script src="/js/search.js"></script>
+{% endif %}
+```
+在这个页面中我们根据配置动态切换两种搜索引擎：lunjs和Azure Search。  
+配置参数在_config.xml中填写：
+```html
+# Search settings
+azuresearch: true  #是否启用Azure Search搜索
+```
+到这里，所有的配置工作已经结束，你也可以在我的博客网站看到实际的效果。
 >参考资料：
 >
 >- [Add Search to a Jekyll Blog for Free with Azure Search](http://anthonychu.ca/post/add-search-to-jekyll-blog-free-azure-search/ "Add Search to a Jekyll Blog for Free with Azure Search")

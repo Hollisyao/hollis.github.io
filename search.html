@@ -16,6 +16,10 @@ description: "Search Center"
 
 <ul id="search-results"></ul>
 
+{% if site.azuresearch %}
+<script src="/js/azure-search.min.js"></script>
+<script src="/js/azure-search-results.js"></script>
+{% else %}
 <script>
   window.store = {
     {% for post in site.posts %}
@@ -33,3 +37,4 @@ description: "Search Center"
 </script>
 <script src="/js/lunr.min.js"></script>
 <script src="/js/search.js"></script>
+{% endif %}
