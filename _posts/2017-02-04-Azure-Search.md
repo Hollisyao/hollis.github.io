@@ -140,7 +140,7 @@ var schema = {
             sortable: true,
             facetable: false,
             key: false,
-            analyzer: 'en.microsoft'
+            analyzer: 'zh-Hans.microsoft'
         },
 
         // ...
@@ -156,6 +156,7 @@ var schema = {
 
 ```
 在上面的代码中，定义了索引的架构，架构的详细解释请参考[search-what-is-an-index](https://docs.microsoft.com/zh-cn/azure/search/search-what-is-an-index "search-what-is-an-index")。  
+这里面尤其要注意的是分析器analyzer的定义，一开始我用默认的英文的，对中文搜索怎么都不感冒，后来才注意到这个设置的问题。对于我的站点，必须用简体中文分词器，所有语言的分词器缩写请参考[Language Support](https://docs.microsoft.com/zh-cn/rest/api/searchservice/Language-support "Language Support")。
 在代码最后，我们定义了corsOptions为*，代表这个查询可以从任何域名发起，你也可以根据安全策略，限制这个地址为某个域名或者IP地址。
 
 结构定义完毕之后，就是创建索引和插入document数据了。

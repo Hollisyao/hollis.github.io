@@ -89,7 +89,7 @@ function rebuildSearchIndex(posts) {
                 sortable: true,
                 facetable: false,
                 key: false,
-                analyzer: 'en.microsoft'
+                analyzer: 'zh-Hans.microsoft'
             },
             { 
                 name: 'content',
@@ -100,7 +100,7 @@ function rebuildSearchIndex(posts) {
                 sortable: true,
                 facetable: false,
                 key: false,
-                analyzer: 'en.microsoft'
+                analyzer: 'zh-Hans.microsoft'
             },
             { 
                 name: 'url',

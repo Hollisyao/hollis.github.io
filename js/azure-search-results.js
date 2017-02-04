@@ -31,7 +31,7 @@
         var item = results[i];
         var title = item.title;
 		//如果标题命中了，就返回带突出显示片段，否则返回原样的标题
-        if (item["@search.highlights"].title.length > 0)
+        if (item["@search.highlights"].title && item["@search.highlights"].title.length > 0)
           title = item["@search.highlights"].title["0"];
 		
         appendString += '<li><a href="' + item.url + '"><h3>' + title + '</h3></a>';
@@ -39,7 +39,7 @@
         //appendString += '<p class="post-meta">' + new Date(item.date).Format("yyyy-MM-dd") + '</p>';
 		
 		//判断有多少命中片段，只显示最前面的三个
-		if(item["@search.highlights"].content.length > 0)
+		if(item["@search.highlights"].content && item["@search.highlights"].content.length > 0)
 		{
 			for (var j = 0; j < item["@search.highlights"].content.length; j++)
 			{
