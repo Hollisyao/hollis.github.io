@@ -11,7 +11,7 @@
     <meta name="keywords" content="Hollis, Hollis Yao, 尧敏华, 尧敏华的博客, 博客, 个人网站, 互联网, 产品, C#, Azure">
     <meta name="theme-color" content="#000000">
     
-    <title>Hollis's Blog | 尧敏华的独立站点</title>
+    <title>About - Hollis's Blog | 尧敏华的独立站点</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -20,7 +20,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://hollisyao.me/">
+    <link rel="canonical" href="http://hollisyao.me/about/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -169,14 +169,14 @@
 
 
     <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg-art.jpg')">
+<header class="intro-header" style="background-image: url('/img/about-bg.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
                 <div class="site-heading">
-                    <h1>Hollis's Blog</h1>
+                    <h1>About</h1>
                     <!--<hr class="small">-->
-                    <span class="subheading">用代码调戏人生</span>
+                    <span class="subheading">Hey, this is Hollis Yao.</span>
                 </div>
             </div>
         </div>
@@ -197,37 +197,126 @@
                 col-xs-12
                 postlist-container
             ">
-    			
-<div class="post-preview">
-    <a href="/azure/2017/02/04/Azure-Search/">
-        <h2 class="post-title">
-            <i></i> 撸Azure羊毛之Azure Search
-        </h2>
-        
-        <h3 class="post-subtitle">
-            论免费使用Azure Search为Jekyll提供全文搜索能力的正确姿势
-        </h3>
-        
-        <div class="post-content-preview">
-            
-  2017年我最重要的目标之一就是坚持写博客。
-本文技术栈：Jekyll, liquid, Azure Search, Node.js, html, javascript, xml。
-坚持阅读本文默认为已经具备以上技术栈，否则后果不负。
+    			<!-- Language Selector -->
+<select class="sel-lang" onchange="onLanChange(this.options[this.options.selectedIndex].value)">
+    <option value="0" selected> 中文 Chinese </option>
+    <option value="1"> 英文 English </option>
+</select>
 
+<!-- Chinese Version -->
+<div class="zh post-container">
 
-作为一个（自诩😝）全栈攻城狮，写博客这么一件稀松平常的事情，也不能写得太平常了。
+    <!--copied from markdown -->
+    <blockquote><p>代码演绎人生，<br>
+    人生没有地图，我们一路走，一路点燃希望，一路寻找答案。</p></blockquote>
 
-首先，要构建一个适合Geeker的高逼格的个人博客，一定不是博客...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Hollis Yao on February 4, 2017
-    </p>
+    <p>Hey，我是<strong>尧敏华</strong>，你可以叫我Hollis，程序猿 &amp; 架构师，任职于微软中国。</p>
+
+     
+    <p>强迫症，完美主义者，习惯性熬夜患者，严重拖延症患者。</p>
+    <!-- <h5>Talks</h5>
+
+    <ul>
+    <li><a href="//huangxuan.me/2016/11/20/sw-101-gdgdf/">Service Worker 101 · GDG DevFest 2016 北京</a></li>
+    <li><a href="//huangxuan.me/2016/10/20/pwa-qcon2016/">Progressive Web Apps，复兴序章 · QCon 上海 2016</a></li>
+    <li><a href="//huangxuan.me/2016/06/05/pwa-in-my-pov/">Progressive Web App 之我见 · 2016</a></li>
+    <li><a href="//huangxuan.me/2015/12/28/css-sucks-2015/">CSS Still Sucks 2015 · 2015</a></li>
+    <li><a href="//huangxuan.me/2015/07/09/js-module-7day/">JavaScript 模块化七日谈 · 2015</a></li>
+    </ul> -->
 </div>
-<hr>
+
+<!-- English Version -->
+<div class="en post-container">
+    <blockquote><p>Code is life. <br>
+    Code is answer.</p></blockquote>
+
+    <p>Hi, I am <strong>Hollis Yao(尧敏华)</strong>，you can call me <strong>Hollis</strong>. I'm an engineer &amp; an architecture who works at Microsoft China.</p>
+
+    
+    
+    <!-- <h5>Talks</h5>
+
+    <ul>
+    <li><a href="//huangxuan.me/2016/11/20/sw-101-gdgdf/">Service Worker 101, working offline and instant loading · GDG DevFest 2016 Beijing</a></li>
+    <li><a href="//huangxuan.me/2016/10/20/pwa-qcon2016/">Progressive Web Apps, make web great again · QCon Shanghai 2016</a></li>
+    <li><a href="//huangxuan.me/2016/06/05/pwa-in-my-pov/">Progressive Web App in my pov · 2016</a></li>
+    <li><a href="//huangxuan.me/2015/12/28/css-sucks-2015/">CSS Still Sucks 2015, and how we work around it · 2015</a></li>
+    <li><a href="//huangxuan.me/2015/07/09/js-module-7day/">JavaScript Modularization Journey · 2015</a></li>
+    </ul> -->
+</div>
+
+<!-- Handle Language Change -->
+<script type="text/javascript">
+    // get nodes
+    var $zh = document.querySelector(".zh");
+    var $en = document.querySelector(".en");
+    var $select = document.querySelector("select");
+
+    // bind hashchange event
+    window.addEventListener('hashchange', _render);
+
+    // handle render
+    function _render(){
+        var _hash = window.location.hash;
+        // en
+        if(_hash == "#en"){
+            $select.selectedIndex = 1;
+            $en.style.display = "block";
+            $zh.style.display = "none";
+        // zh by default
+        }else{
+            // not trigger onChange, otherwise cause a loop call.
+            $select.selectedIndex = 0;
+            $zh.style.display = "block";
+            $en.style.display = "none";
+        }
+    }
+
+    // handle select change
+    function onLanChange(index){
+        if(index == 0){
+            window.location.hash = "#zh"
+        }else{
+            window.location.hash = "#en"
+        }
+    }
+
+    // init
+    _render();
+</script>
 
 
-<!-- Pager -->
+
+
+<!-- 多说评论框 start -->
+<div class="comment">
+    <!-- This id is used for indexing my loss comments forcedly 1187623191091085319,6380142516141818626-->
+    <div class="ds-thread" data-thread-key="hollisyao/about" data-title="About" data-url="http://hollisyao.me/about/">
+	<!-- U can just use this key （data-thread-key）generated to index comments at page about -->
+	</div>
+</div>
+<!-- 多说评论框 end -->
+
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    // dynamic User hacking by Hux
+    var _user = 'hollisyao';
+
+    // duoshuo comment query.
+    var duoshuoQuery = {short_name: _user };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+
+
 
 
     		</div>

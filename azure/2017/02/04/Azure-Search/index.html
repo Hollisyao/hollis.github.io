@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="架构师 | 羽毛球爱好者 | 这里是 Hollis Yao 的个人博客，独立站点，用代码调戏人生的全栈攻城狮。">
+    <meta name="keywords" content="Hollis, Hollis Yao, 尧敏华, 尧敏华的博客, 博客, 个人网站, 互联网, 产品, C#, Azure">
+    <meta name="theme-color" content="#000000">
+    
+    <title>撸Azure羊毛之Azure Search - Hollis's Blog | 尧敏华的独立站点</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://hollisyao.me/azure/2017/02/04/Azure-Search/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Hollis's Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+					<!--不显示具体的分类目录，added by Hollis Yao-->
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+					
+                    
+					<!--不显示具体的分类目录，added by Hollis Yao-->
+                    <li>
+                        <a href="/categories/">Categories</a>
+                    </li>
+					
+                    
+					<!--不显示具体的分类目录，added by Hollis Yao-->
+                    <li>
+                        <a href="/search/">Search</a>
+                    </li>
+					
+                    
+					<!--不显示具体的分类目录，added by Hollis Yao-->
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+					
+                    
+					
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/posts/Azure-Search-Header.png" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/posts/Azure-Search-Header.png')
+    }
+
+    
+</style>
+<header class="intro-header">
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Azure%20Search" title="Azure Search">Azure Search</a>
+                        
+                        <a class="tag" href="/tags/#Jekyll" title="Jekyll">Jekyll</a>
+                        
+                    </div>
+                    <h1>
+<i></i> 撸Azure羊毛之Azure Search</h1>
+                    
+                    
+                    <h2 class="subheading">论免费使用Azure Search为Jekyll提供全文搜索能力的正确姿势</h2>
+                    
+                    <span class="meta">Posted by Hollis Yao on February 4, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p><em>2017年我最重要的目标之一就是<strong>坚持</strong>写博客。</em><br>
+本文技术栈：Jekyll, liquid, Azure Search, Node.js, html, javascript, xml。<br>
+坚持阅读本文默认为已经具备以上技术栈，否则后果不负。</p>
+</blockquote>
+
+<p>作为一个（自诩😝）全栈攻城狮，写博客这么一件稀松平常的事情，也不能写得太平常了。</p>
+
+<p>首先，要构建一个适合Geeker的高逼格的个人博客，一定不是博客园、CSDN，也不是现在比较流行的简书。所以，在死了很多脑细胞之后，最终选定了Github+Jekyll，来构建高效、静态的独立个人站点，并且用最适合码字的Markdown书写。</p>
+
+<p>当然，因为这是一个静态博客的平台，为了让它能有各种动态酷炫的效果，我也是操碎心了，虽然借用了别人的模板，但也是爬了各种坑，到最后，还添加了我需要的分类、搜索、草稿文章标识等功能。</p>
+
+<p>然而，程序猿总是有点洁癖和强迫症的，lunr.js的搜索对中文的支持实在是不堪，在没有服务器端的支持下，只能对中文进行简单搜索，还是无法支持中文分词。转念一想，我软有一个这么强大的搜索服务，为什么不能做一个整合呢。再一研究，居然免费版也足够我使用，心动不如行动，于是乎，就有了我这第一篇博客。</p>
+
+<h4 id="azure背景简述">Azure背景简述</h4>
+<p>什么叫撸羊毛？就是占便宜嘛，今天我们用Azure这样一个商业云服务，免费为我们提供全文搜索服务。
+Azure分为全球版和中国版，都有很多免费使用的方式，足够大家针对开发、测试和小型应用场景。以下渠道可以试用Azure：</p>
+<ol>
+  <li>全球版，免费注册，送200美金额度；中国版，一元注册试用账号，1500元人民币额度。</li>
+  <li>MSDN订阅可以免费获取全球版25美金/月的额度。</li>
+  <li>微软员工可以免费获取全球版150美金/月的额度。<br>
+目前Azure Search只在全球版Azure提供，将来也会进入中国。</li>
+</ol>
+
+<h4 id="准备要搜索的数据">准备要搜索的数据</h4>
+<p>为了让Azure Search能搜索全站的文章，我们必须把所有文章的数据集合到一个文件中。Jekyll有一个官方插件jekyll-feed，可以把所有文章用一个RSS形式整理起来，作为一个RSS订阅给用户使用。但是，这里面生成的RSS文件，对于文章正文内容只有摘要，没有全部内容，所以我们需要略微改写。参考了<a href="https://github.com/anthonychu/jekyll-azure-search-demo/blob/master/jekyll-rss-feed/all.xml" title="all.xml">all.xml</a>,再根据我的博客配置情况作了修改：</p>
+<ol>
+  <li>禁止了继承config.xml的全局设置</li>
+  <li>修正了几个bug，并调整了一些格式</li>
+</ol>
+
+<div class="language-liquid highlighter-rouge">
+<pre class="highlight"><code>---
+layout: null #禁用掉全局模板页的设置, added by Hollis Yao
+---
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"&gt;
+    &lt;channel&gt;
+        &lt;title&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">site</span><span class="p">.</span><span class="nv">title</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>&lt;/title&gt;
+        &lt;description&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">site</span><span class="p">.</span><span class="nv">description</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>&lt;/description&gt;		
+        &lt;link&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">site</span><span class="p">.</span><span class="nv">url</span><span class="w"> </span><span class="p">}}{{</span><span class="w"> </span><span class="nv">site</span><span class="p">.</span><span class="nv">baseurl</span><span class="w"> </span><span class="p">}}</span>/&lt;/link&gt;
+		&lt;atom:link href="<span class="p">{{</span><span class="w"> </span><span class="s2">"/allfeed.xml"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">prepend</span><span class="p">:</span><span class="w"> </span>site.baseurl<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">prepend</span><span class="p">:</span><span class="w"> </span>site.url<span class="w"> </span><span class="p">}}</span>" rel="self" type="application/rss+xml" /&gt;
+        &lt;pubDate&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">site</span><span class="p">.</span><span class="nv">time</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">date_to_rfc822</span><span class="w"> </span><span class="p">}}</span>&lt;/pubDate&gt;
+        &lt;lastBuildDate&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">site</span><span class="p">.</span><span class="nv">time</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">date_to_rfc822</span><span class="w"> </span><span class="p">}}</span>&lt;/lastBuildDate&gt;
+        &lt;generator&gt;Jekyll v<span class="p">{{</span><span class="w"> </span><span class="nv">jekyll</span><span class="p">.</span><span class="nv">version</span><span class="w"> </span><span class="p">}}</span>&lt;/generator&gt;
+        <span class="p">{%</span><span class="w"> </span><span class="nt">for</span><span class="w"> </span>post<span class="w"> </span>in<span class="w"> </span>site.posts<span class="w"> </span><span class="p">%}</span>
+            &lt;item&gt;
+                &lt;title&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">title</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>&lt;/title&gt;
+            <span class="p">{%</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">author</span><span class="w"> </span><span class="p">%}</span>
+                &lt;dc:creator&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">author</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>&lt;/dc:creator&gt;
+            <span class="p">{%</span><span class="w"> </span><span class="kr">endif</span><span class="w"> </span><span class="p">%}</span>
+                &lt;description&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">content</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>&lt;/description&gt;
+                &lt;pubDate&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">date</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">date</span><span class="p">:</span><span class="w"> </span><span class="s2">"%a, %d %b %Y %H:%M:%S %z"</span><span class="w"> </span><span class="p">}}</span>&lt;/pubDate&gt;
+                &lt;link&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">url</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">prepend</span><span class="p">:</span><span class="w"> </span>site.baseurl<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">prepend</span><span class="p">:</span><span class="w"> </span>site.url<span class="w"> </span><span class="p">}}</span>&lt;/link&gt;
+                &lt;guid isPermaLink="true"&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">url</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">prepend</span><span class="p">:</span><span class="w"> </span>site.baseurl<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">prepend</span><span class="p">:</span><span class="w"> </span>site.url<span class="w"> </span><span class="p">}}</span>&lt;/guid&gt;
+            <span class="p">{%</span><span class="w"> </span><span class="nt">for</span><span class="w"> </span>category<span class="w"> </span>in<span class="w"> </span>post.categories<span class="w"> </span><span class="p">%}</span>
+                &lt;category&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="p">}}</span>&lt;/category&gt;
+            <span class="p">{%</span><span class="w"> </span><span class="nt">endfor</span><span class="w"> </span><span class="p">%}</span>
+            <span class="p">{%</span><span class="w"> </span><span class="nt">for</span><span class="w"> </span>tag<span class="w"> </span>in<span class="w"> </span>post.tags<span class="w"> </span><span class="p">%}</span>
+                &lt;category&gt;<span class="p">{{</span><span class="w"> </span><span class="nv">tag</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>&lt;/category&gt;
+            <span class="p">{%</span><span class="w"> </span><span class="nt">endfor</span><span class="w"> </span><span class="p">%}</span>
+            &lt;/item&gt;
+        <span class="p">{%</span><span class="w"> </span><span class="nt">endfor</span><span class="w"> </span><span class="p">%}</span>
+    &lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</div>
+<p>完整文件在这里<a href="https://github.com/hollisyao/hollisyao.github.io/blob/dev/allfeed.xml" title="allfeed.xml">allfeed.xml</a></p>
+
+<h4 id="配置azure-search">配置Azure Search</h4>
+<p>在这个章节里面，我们会创建Azure Search服务，并进行相关配置，以便搜索服务能够正常运行在博客网站。
+接下来的配置会基于Node.js的环境来运行，所以必须先在本地安装Node.js环境。</p>
+
+<h5 id="在windows-10安装配置nodejs">在Windows 10安装配置Node.js</h5>
+<p>进入官网<a href="https://nodejs.org/en/" title="https://nodejs.org/en/">https://nodejs.org/en/</a>，找到LTS版本，点击下载，得到安装文件之后，一路Next，安装完毕。
+进入cmd，执行一些测试验证node.js安装成功。
+<img src="/img/posts/Azure-Search-3.jpg" alt=""></p>
+<h6 id="配置nodejs">配置Node.js</h6>
+<p>npm是node.js模块管理插件，也是node如此大红大紫最重要的工具，所以我们必须系统的配置好npm，让它更好的发挥作用。</p>
+<ol>
+  <li>配置npm的全局模块和cache路径，在在nodejs的安装目录中新建文件夹：node_global和node_cache。
+<img src="/img/posts/Azure-Search-4.jpg" alt="">
+</li>
+  <li>在cmd中输入以下命令：设置对应的路径映射。
+    <pre><code class="language-node">npm config set prefix "C:\Program Files\nodejs\node_global"
+npm config set cache "C:\Program Files\nodejs\node_cache"
+</code></pre>
+  </li>
+  <li>尝试安装express模块，在命令行中输入：npm install express -g (-g表示全局安装即安装到node_global目录下)。</li>
+  <li>查看系统环境变量：鼠标右键单击我的电脑→属性→高级系统设置→环境变量→在系统变量下新建<strong>NODE_PATH</strong>并输入”C:\Program Files\nodejs\node_global\node_modules”。</li>
+  <li>重新打开cmd，让刚才设置的系统变量生效，输入node，然后再输入”require(‘express’)”测试node模块的全局路径是否配置正确。
+至此，npm的配置即完成了。</li>
+</ol>
+
+<h5 id="创建azure-search服务">创建Azure Search服务</h5>
+<p>打开浏览器，输入portal.azure.com，进入Azure全球版管理门户，登陆之后，进入主界面，依次按照下图所示点击
+<img src="/img/posts/Azure-Search-1.jpg" alt="">
+在新建搜索服务输入相关信息，确保选中免费定价级别的服务即可，检查输入信息完毕之后，点击创建，稍等片刻，搜索服务即创建完成。
+<img src="/img/posts/Azure-Search-2.jpg" alt=""></p>
+
+<h5 id="创建索引和添加数据">创建索引和添加数据</h5>
+
+<blockquote>
+  <p>要使用Azure Search，就必须先为它建立索引结构。
+让我们先了解一下Azure Search，可通过两种方法在数据中填充索引。 第一种方法是使用 Azure 搜索的 REST API 或 .NET SDK 将数据手动推送至索引。 第二种方法是将支持的数据源指向索引，让 Azure 搜索自动提取数据。<br>
+这里我们采用第一种方式，将数据推送到Azure Search的索引。这种方法只能通过SDK来实现，无法在门户中操作。<br>
+Azure 搜索识别的数据格式为 JSON，数据集中的所有文档必须包含可映射到索引架构中定义的字段的字段。</p>
+</blockquote>
+
+<blockquote>
+  <p>索引是 Azure 搜索服务使用的文档及其他结构的永久存储。 文档是索引中的一个可搜索数据单元。 例如，电子商务零售商可能有所销售每件商品的文档，新闻机构可能有每篇报道的文档。将这些概念对应到更为熟悉的数据库等效对象：索引在概念上类似于表，文档大致相当于表中的行。</p>
+</blockquote>
+
+<p>在本节中，我们会读取上一个步骤中生成的RSS文件，每篇文章生成一个document传到Azure Search Index，这些操作会使用<a href="https://www.npmjs.com/package/azure-search" title="azure-search">azure-search</a>这个node.js插件来完成。</p>
+
+<p>为了让索引识别我们的数据，我们必须先定义索引架构，也就是数据结构：有哪些字段，每个字段的数据类型是什么？是否可以被搜索、排序和过滤等。</p>
+
+<div class="language-javascript highlighter-rouge">
+<pre class="highlight"><code><span class="kd">var</span> <span class="nx">schema</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="nx">indexName</span><span class="p">,</span>
+    <span class="na">fields</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span> 
+            <span class="na">name</span><span class="p">:</span> <span class="s1">'id'</span><span class="p">,</span>
+            <span class="na">type</span><span class="p">:</span> <span class="s1">'Edm.String'</span><span class="p">,</span>
+            <span class="na">searchable</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="na">filterable</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="na">retrievable</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="na">sortable</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="na">facetable</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="na">key</span><span class="p">:</span> <span class="kc">true</span> 
+        <span class="p">},</span>
+        <span class="p">{</span> 
+            <span class="na">name</span><span class="p">:</span> <span class="s1">'title'</span><span class="p">,</span>
+            <span class="na">type</span><span class="p">:</span> <span class="s1">'Edm.String'</span><span class="p">,</span>
+            <span class="na">searchable</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="na">filterable</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="na">retrievable</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="na">sortable</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="na">facetable</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="na">key</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="na">analyzer</span><span class="p">:</span> <span class="s1">'zh-Hans.microsoft'</span>
+        <span class="p">},</span>
+
+        <span class="c1">// ...</span>
+
+    <span class="p">],</span>
+
+    <span class="c1">// ...</span>
+
+    <span class="na">corsOptions</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">allowedOrigins</span><span class="p">:</span> <span class="p">[</span><span class="s1">'*'</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+</code></pre>
+</div>
+<p>在上面的代码中，定义了索引的架构，架构的详细解释请参考<a href="https://docs.microsoft.com/zh-cn/azure/search/search-what-is-an-index" title="search-what-is-an-index">search-what-is-an-index</a>。<br>
+这里面尤其要注意的是分析器analyzer的定义，一开始我用默认的英文的，对中文搜索怎么都不感冒，后来才注意到这个设置的问题。对于我的站点，必须用简体中文分词器，所有语言的分词器缩写请参考<a href="https://docs.microsoft.com/zh-cn/rest/api/searchservice/Language-support" title="Language Support">Language Support</a>。
+在代码最后，我们定义了corsOptions为*，代表这个查询可以从任何域名发起，你也可以根据安全策略，限制这个地址为某个域名或者IP地址。</p>
+
+<p>结构定义完毕之后，就是创建索引和插入document数据了。</p>
+<div class="language-javascript highlighter-rouge">
+<pre class="highlight"><code><span class="c1">// delete index</span>
+<span class="nx">searchClient</span><span class="p">.</span><span class="nx">deleteIndex</span><span class="p">(</span><span class="nx">indexName</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+
+    <span class="c1">// create index</span>
+    <span class="nx">searchClient</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span><span class="nx">schema</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">schema</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">dir</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+            <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nx">each</span><span class="p">(</span><span class="nx">posts</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">post</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// add document to index</span>
+            <span class="nx">searchClient</span><span class="p">.</span><span class="nx">addDocuments</span><span class="p">(</span><span class="nx">indexName</span><span class="p">,</span> <span class="p">[</span><span class="nx">post</span><span class="p">],</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">details</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span> <span class="o">||</span> 
+                    <span class="p">(</span><span class="nx">details</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="nx">details</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">status</span> <span class="p">?</span> <span class="s1">'OK'</span> <span class="p">:</span> <span class="s1">'failed'</span><span class="p">));</span>
+                <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">details</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Finished rebuilding index.'</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre>
+</div>
+<p>完整的代码请参考<a href="https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-search-buildindex.js" title="azure-search-buildindex">azure-search-buildindex.js</a></p>
+
+<p>接下来，在本机执行下面这段node.js脚本，先通过npm安装依赖的模块，然后把数据提交给Azure Search索引。</p>
+<pre><code class="language-node">npm install feedparser -g
+npm install fs -g
+npm install string -g
+npm install azure-search -g
+npm install async-each-series -g
+npm install minimist -g
+node azure-search-buildindex.js --rss &lt;RSS_PATH&gt; --search-url &lt;URL&gt; --search-key &lt;KEY&gt;
+</code></pre>
+<blockquote>
+  <p>RSS_PATH：rss文件路径；URL：Azure Search的URL；KEY：azure search的key。</p>
+</blockquote>
+
+<p>Azure Search 的URl如下图
+<img src="/img/posts/Azure-Search-5.jpg" alt="">
+Azure Search 的Key如下图
+<img src="/img/posts/Azure-Search-6.png" alt="">
+我的环境中的示例命令如下：</p>
+<pre><code class="language-node">node C:\Users\holyao\Documents\GitHub\hollisyao.github.io\js\azure-search-buildindex.js --rss C:\Users\holyao\Documents\GitHub\hollisyao.github.io\_site\allfeed.xml --search-url https://hollisblog.search.windows.net --search-key XXXXXXXXXXXXXXXXXXXXXXXXXX
+</code></pre>
+<blockquote>
+  <p>我的search-key可不能告诉你们</p>
+</blockquote>
+
+<p>上面这段脚本必须在每次新增或者修改文章之后，被执行一次，用来重新创建Azure Search索引。
+在本机执行完毕这段脚本之后，在Azure Portal中查看，已经能看到索引被创建，并且有三篇测试博客被索引了。
+<img src="/img/posts/Azure-Search-7.png" alt=""></p>
+
+<h5 id="搜索索引">搜索索引</h5>
+<p>最后一步，就是在Jekyll网站中，添加一个页面，用客户端的Javascript脚本来搜索Azure Search的索引数据。
+我先来写这个客户端脚本，我把它命名为：azure-search-results.js，关键代码如下：</p>
+<div class="language-javascript highlighter-rouge">
+<pre class="highlight"><code><span class="kd">function</span> <span class="nx">BlogSearchService</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">svc</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">indexName</span> <span class="o">=</span> <span class="s1">'blog-posts'</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">AzureSearch</span><span class="p">({</span>
+            <span class="na">url</span><span class="p">:</span> <span class="s1">'https://hollisblog.search.windows.net'</span><span class="p">,</span>
+            <span class="na">key</span><span class="p">:</span><span class="s1">'XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'</span><span class="p">,</span>
+            <span class="na">version</span><span class="p">:</span> <span class="s1">'2016-09-01'</span>
+        <span class="p">});</span>
+	<span class="c1">//define a search property for BlogSearchService class</span>
+    <span class="nx">svc</span><span class="p">.</span><span class="nx">search</span> <span class="o">=</span> <span class="nx">search</span><span class="p">;</span>
+
+
+    
+    <span class="kd">function</span> <span class="nx">search</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">searchOptions</span> <span class="o">=</span> <span class="p">{</span> <span class="na">search</span><span class="p">:</span> <span class="nx">query</span><span class="p">,</span> <span class="s1">'select'</span><span class="p">:</span> <span class="s1">'id, title, url, date'</span><span class="p">,</span> 
+                                             <span class="s1">'highlight'</span><span class="p">:</span> <span class="s1">'title, content'</span><span class="p">,</span> 
+                                             <span class="s1">'highlightPreTag'</span><span class="p">:</span> <span class="s1">'&lt;strong&gt;&lt;em&gt;'</span><span class="p">,</span> <span class="s1">'highlightPostTag'</span><span class="p">:</span> <span class="s1">'&lt;/em&gt;&lt;/strong&gt;'</span> <span class="p">};</span>
+        <span class="nx">client</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">indexName</span><span class="p">,</span> <span class="nx">searchOptions</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre>
+</div>
+<p>在这里使用了新版API的一些特性，比如highlight，就是能够突出显示命中关键字，这样只需要返回正文中命中部分就可以了，不需要返回全部的正文再截取。
+完整的代码文件在这里<a href="https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-search-results.js" title="azure-search-results.js">azure-search-results.js</a>  （我的key还是暴露了 ）<br>
+在上面的代码中用到了AzureSearch对象，这是一个nodejs对象，大家想想看，如果在纯客户端环境中，它还能执行吗？所以，在这里我们要使用azure-search的浏览器版本，浏览器版本可以在这下载，<a href="https://github.com/hollisyao/hollisyao.github.io/blob/dev/js/azure-search.min.js" title="azure-search.min.js">azure-search.min.js</a></p>
+
+<p>脚本配置完毕之后，我们来写搜索的html页面，代码如下：</p>
+<div class="language-liquid highlighter-rouge">
+<pre class="highlight"><code>---
+title: Search
+layout: search
+description: "Search Center"
+---
+&lt;form action="/search" method="get" class="bs-example bs-example-form"&gt;
+  &lt;!--&lt;label for="search-box" style="display:hidden;"&gt;Search&lt;/label&gt;--&gt;
+  &lt;div class="input-group"&gt;
+	  &lt;input type="text" id="search-box" name="query" class="form-control" placeholder="What are you looking for"/&gt;
+	  &lt;span class="input-group-addon" style="padding: 0px;"&gt;
+		&lt;input type="submit" value="Search" class="btn btn-primary" style="padding: 3.5px 20px;"/&gt;
+	  &lt;/span&gt;
+	  
+  &lt;/div&gt;
+&lt;/form&gt;
+
+&lt;ul id="search-results"&gt;&lt;/ul&gt;
+
+<span class="p">{%</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="nv">site</span><span class="p">.</span><span class="nv">azuresearch</span><span class="w"> </span><span class="p">%}</span>
+&lt;script src="/js/azure-search.min.js"&gt;&lt;/script&gt;
+&lt;script src="/js/azure-search-results.js"&gt;&lt;/script&gt;
+<span class="p">{%</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="p">%}</span>
+&lt;script&gt;
+  window.store = {
+    <span class="p">{%</span><span class="w"> </span><span class="nt">for</span><span class="w"> </span>post<span class="w"> </span>in<span class="w"> </span>site.posts<span class="w"> </span><span class="p">%}</span>
+      "<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">url</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">slugify</span><span class="w"> </span><span class="p">}}</span>": {
+        "title": "<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">title</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>",
+        "author": "<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">author</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>",
+        "category": "<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">category</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>",
+        "date": "<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">date</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>",
+        "content": <span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">content</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">strip_html</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">strip_newlines</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">jsonify</span><span class="w"> </span><span class="p">}}</span>,
+        "url": "<span class="p">{{</span><span class="w"> </span><span class="nv">post</span><span class="p">.</span><span class="nv">url</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">xml_escape</span><span class="w"> </span><span class="p">}}</span>"
+      }
+      <span class="p">{%</span><span class="w"> </span><span class="kr">unless</span><span class="w"> </span><span class="nv">forloop</span><span class="p">.</span><span class="nv">last</span><span class="w"> </span><span class="p">%}</span>,<span class="p">{%</span><span class="w"> </span><span class="kr">endunless</span><span class="w"> </span><span class="p">%}</span>
+    <span class="p">{%</span><span class="w"> </span><span class="nt">endfor</span><span class="w"> </span><span class="p">%}</span>
+  };
+&lt;/script&gt;
+&lt;script src="/js/lunr.min.js"&gt;&lt;/script&gt;
+&lt;script src="/js/search.js"&gt;&lt;/script&gt;
+<span class="p">{%</span><span class="w"> </span><span class="kr">endif</span><span class="w"> </span><span class="p">%}</span>
+</code></pre>
+</div>
+<p>在这个页面中我们根据配置动态切换两种搜索引擎：lunjs和Azure Search。<br>
+配置参数在_config.xml中填写：</p>
+<div class="language-html highlighter-rouge">
+<pre class="highlight"><code># Search settings
+azuresearch: true  #是否启用Azure Search搜索
+</code></pre>
+</div>
+<p>到这里，所有的配置工作已经结束，你也可以在我的博客网站看到实际的效果。
+<img src="/img/posts/Azure-Search-8.png" alt=""></p>
+
+<hr>
+
+<blockquote>
+  <p>参考资料：</p>
+
+  <ul>
+    <li><a href="http://anthonychu.ca/post/add-search-to-jekyll-blog-free-azure-search/" title="Add Search to a Jekyll Blog for Free with Azure Search">Add Search to a Jekyll Blog for Free with Azure Search</a></li>
+  </ul>
+</blockquote>
+
+
+                <hr style="visibility: hidden;">
+
+                
+                <!-- 多说 Share start -->
+                <div class="ds-share flat" style="text-align: right" data-thread-key="/azure/2017/02/04/Azure-Search" data-title="撸Azure羊毛之Azure Search" data-url="http://hollisyao.me/azure/2017/02/04/Azure-Search/" data-images="http://hollisyao.me/img/posts/Azure-Search-Header.png" data-content="
+  2017年我最重要的目标之一就是坚持写博客。
+本文技术栈：Jekyll, liquid, Azure Search, Node.js, html, ... | Hollis's Blog | 尧敏华的独立站点 ">
+                    <div class="ds-share-inline">
+                      <ul class="ds-share-icons-16">
+                        <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
+                        <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+                        <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+                        <li><a class="ds-douban" href="javascript:void(0);" data-service="douban">豆瓣</a></li>
+                      </ul>
+                      <div class="ds-share-icons-more">
+                      </div>
+                    </div>
+					<hr>
+                </div>
+                <!-- 多说 Share end-->
+                
+			
+                <ul class="pager">
+                    
+                    
+                </ul>
+
+
+                
+                <!-- 多说评论框 start -->
+                <div class="comment">
+                    <div class="ds-thread" data-thread-key="/azure/2017/02/04/Azure-Search" data-title="撸Azure羊毛之Azure Search" data-url="http://hollisyao.me/azure/2017/02/04/Azure-Search/">
+                    </div>
+                </div>
+                <!-- 多说评论框 end -->
+                
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Azure%20Search" title="Azure Search" rel="1">
+                                    Azure Search
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Jekyll" title="Jekyll" rel="1">
+                                    Jekyll
+                                </a>
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="#">虚位以待1</a></li>
+                    
+                        <li><a href="#">虚位以待2</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    // dynamic User by Hux
+    var _user = 'hollisyao';
+
+    // duoshuo comment query.
+    var duoshuoQuery = {short_name: _user };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/hollisyao">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/hollisyao">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/hollisyao">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/hollisyao">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+					<li>
+						<a href="mailto:hollisyao@outlook.com" title="Email me">
+							<span class="fa-stack fa-lg">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+							</span>
+						</a>
+					</li>
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright © Hollis's Blog 2017
+                    <br>
+                    Theme by <a href="http://hollisyao.me">Hollis Yao</a> |
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px" height="20px" src="https://ghbtns.com/github-btn.html?user=hollisyao&amp;repo=hollisyao.github.io/tree/dev&amp;type=star&amp;count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '62d2cf69946e4f0efedabfef6d45d181';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0">
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
